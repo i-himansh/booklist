@@ -1,0 +1,82 @@
+def add_books():
+    title = input('Enter title :').strip().lower()
+    author = input('Enter author :').strip().lower()
+    year = input('Enter year :').strip()
+   # book = f"{title},{author},{year},Not Read\n"
+
+    with open('new.csv', 'a') as reading_list:
+        reading_list.write(f"{title},{author},{year},Not Read\n")
+
+
+def get_all_books ():
+    books=[]
+
+    with open("new.csv","r") as reading_list:
+        for book in reading_list:
+            title, author, year, read_status = book.strip().split(",")
+
+            books.append({
+                "title": title,
+                "author": author,
+                "year": year,
+                "read": read_status
+            })
+    return books
+
+def show_books(books):
+    for book in books :
+        print()
+        print(f"{book['title']}, by {book['author']}({book['year']})- {book['read']}")
+        print()
+
+
+def find_books():
+    reading_list = get_all_books()
+    matching_books = []
+
+    search_item = input("Enter title to search the book:")
+
+    for book in reading_list:
+        if search_item in book['title'].lower():
+            matching_books.append(book)
+
+    return matching_books
+
+menu_prompt = """Please enter one of the following options:
+
+- 'a' to add a book
+- 'l' to list the books
+- 's' to search for a book
+- 'q' to quit
+- 'r' to mark book as read
+- 'd' to delete the book
+  
+What would you like to do? """
+
+user_input = input(menu_prompt).strip().lower()
+
+while user_input != 'q':
+    if user_input == 'a':
+        add_books()
+    elif user_input == 'l':
+        reading_list = get_all_books()
+        if reading_list:
+            show_books(reading_list)
+        else:
+            print("List is empty ")
+    elif user_input == 's':
+        matching_books = find_books()
+        if matching_books:
+            show_books(matching_books)
+        else:
+            print("title not found")
+
+    elif user_input == "r":
+        pass
+
+    elif user_input == "d":
+        pass
+
+    else:
+        print(f" '{user_input}' is not valid option ")
+    user_input = input(menu_prompt).strip().lower()
